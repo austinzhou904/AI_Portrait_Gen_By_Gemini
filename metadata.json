@@ -1,0 +1,5 @@
+{
+  "name": "PortraitGenius AI",
+  "description": "A professional AI portrait generator that creates consistent, high-quality character portraits from reference photos using Gemini 2.5.",
+  "requestFramePermissions": []
+}
