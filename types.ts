@@ -6,7 +6,7 @@ export enum AspectRatio {
   Ratio_16_9 = '16:9',
 }
 
-export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo';
+export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography';
 
 export interface FashionParams {
   glasses: string;
@@ -28,6 +28,24 @@ export interface TattooParams {
   position: string;
   design: string;
   customDesign?: string;
+}
+
+export interface PhotographyParams {
+  generationMode: 'image-to-image' | 'text-to-image';
+  backgroundImage?: string;
+  subject: string;
+  location: string;
+  expression: string;
+  action: string;
+  background: string;
+  atmosphere: string;
+  weather: string;
+  lighting: string;
+  aperture: string;
+  focalLength: string;
+  iso: string;
+  shutterSpeed: string;
+  lensType: string;
 }
 
 export interface PresetScenario {

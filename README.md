@@ -72,20 +72,20 @@
    > [!IMPORTANT]
    > You need to configure your Gemini API key before running the application.
    
-   The repository includes a `.env.local` template file. Follow these steps:
+   The repository includes a `.env.example` template file. Follow these steps:
    
-   a. Fill in your API key in `.env.local`:
-   ```env
-   GEMINI_API_KEY=your_actual_api_key_here
-   ```
-   
-   b. Rename the file from `.env.local` to `.env`:
+   a. Copy `.env.example` to `.env`:
    ```bash
    # On Windows
-   ren .env.local .env
+   copy .env.example .env
    
    # On macOS/Linux
-   mv .env.local .env
+   cp .env.example .env
+   ```
+   
+   b. Edit `.env` and fill in your API key:
+   ```env
+   VITE_GEMINI_API_KEY=your_actual_api_key_here
    ```
    
    Get your API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
@@ -205,20 +205,20 @@ Contributions are welcome! Please feel free to submit a Pull Request.
    > [!IMPORTANT]
    > 在运行应用之前，您需要配置 Gemini API 密钥。
    
-   仓库中包含了一个 `.env.local` 模板文件。请按以下步骤操作：
+   仓库中包含了一个 `.env.example` 模板文件。请按以下步骤操作：
    
-   a. 在 `.env.local` 文件中填入您的 API 密钥：
-   ```env
-   GEMINI_API_KEY=你的实际api密钥
-   ```
-   
-   b. 将文件从 `.env.local` 重命名为 `.env`：
+   a. 复制 `.env.example` 为 `.env`：
    ```bash
    # Windows 系统
-   ren .env.local .env
+   copy .env.example .env
    
    # macOS/Linux 系统
-   mv .env.local .env
+   cp .env.example .env
+   ```
+   
+   b. 编辑 `.env` 文件并填入您的 API 密钥：
+   ```env
+   VITE_GEMINI_API_KEY=你的实际api密钥
    ```
    
    从 [Google AI Studio](https://aistudio.google.com/app/apikey) 获取您的 API 密钥。

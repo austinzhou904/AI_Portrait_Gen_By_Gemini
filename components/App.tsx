@@ -3,11 +3,12 @@ import { ImageUploader } from './ImageUploader';
 import { PresetSelector } from './PresetSelector';
 import { HistoryGallery } from './HistoryGallery';
 import { generatePortrait } from '../services/geminiService';
-import { AspectRatio, PresetScenario, AppMode, HistoryItem, FashionParams, AgeTransformParams, HairstyleParams, TattooParams } from '../types';
+import { AspectRatio, PresetScenario, AppMode, HistoryItem, FashionParams, AgeTransformParams, HairstyleParams, TattooParams, PhotographyParams } from '../types';
 import { FashionControls } from './FashionControls';
 import { AgeControls } from './AgeControls';
 import { HairstyleControls } from './HairstyleControls';
 import { TattooControls } from './TattooControls';
+import { PhotographyControls } from './PhotographyControls';
 import { ASPECT_RATIOS } from '../constants';
 
 const getRatioIconClass = (ratio: string) => {
@@ -55,6 +56,22 @@ const App: React.FC = () => {
   const [tattooParams, setTattooParams] = useState<TattooParams>({
     position: 'upper_arm',
     design: 'dragon'
+  });
+  const [photographyParams, setPhotographyParams] = useState<PhotographyParams>({
+    generationMode: 'text-to-image',
+    subject: '',
+    location: '',
+    expression: 'Smiling',
+    action: '',
+    background: '',
+    atmosphere: 'Peaceful',
+    weather: 'Sunny',
+    lighting: 'golden_hour',
+    aperture: 'f2.8',
+    focalLength: '50mm',
+    iso: '100',
+    shutterSpeed: '250',
+    lensType: 'prime'
   });
 
   // Load history from server on mount
@@ -140,7 +157,8 @@ const App: React.FC = () => {
         fashionParams,
         ageParams,
         hairstyleParams,
-        tattooParams
+        tattooParams,
+        photographyParams
       );
 
       // Save to local server
@@ -167,7 +185,8 @@ const App: React.FC = () => {
             fashionParams,
             ageParams,
             hairstyleParams,
-            tattooParams
+            tattooParams,
+            photographyParams
           }),
         });
 
@@ -357,6 +376,18 @@ const App: React.FC = () => {
                     <div className="flex flex-col items-center">
                       <span className="text-base mb-0.5">💉</span>
                       <span className="text-xs">Tattoo</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('photography'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'photography'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">📷</span>
+                      <span className="text-xs">Photography</span>
                     </div>
                   </button>
                 </div>
@@ -581,6 +612,17 @@ const App: React.FC = () => {
                       />
                     </div>
                   </>
+                ) : mode === 'photography' ? (
+                  <>
+                    {/* Photography Mode Controls */}
+                    <div className="mb-8">
+                      <PhotographyControls
+                        photographyParams={photographyParams}
+                        onChange={setPhotographyParams}
+                        onBackgroundImageChange={(img) => setTargetImage(img)}
+                      />
+                    </div>
+                  </>
                 ) : (
                   <>
                     {/* Fashion Studio Mode Controls */}
@@ -609,11 +651,11 @@ const App: React.FC = () => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : 'Converting...'}
+                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : mode === 'photography' ? 'Generating Photo...' : 'Converting...'}
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : 'Create Look'}
+                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : 'Create Look'}
                     </>
                   )}
                 </button>
@@ -686,7 +728,9 @@ const App: React.FC = () => {
                                   ? 'Upload a photo and try different hairstyles instantly.'
                                   : mode === 'tattoo'
                                     ? 'Upload a photo and preview tattoos on your body.'
-                                    : 'Upload a face and design your perfect outfit.'}
+                                    : mode === 'photography'
+                                      ? 'Create professional photos with guided prompts or image references.'
+                                      : 'Upload a face and design your perfect outfit.'}
                       </p>
                     </div>
                   )}
