@@ -46,12 +46,13 @@ export const generatePortrait = async (
   // Clean the base64 string if it has the data prefix
   const cleanBase64 = (str: string) => str.split(',')[1] || str;
 
-  const refImagePart = {
+  // Only create refImagePart if referenceImageBase64 is provided
+  const refImagePart = referenceImageBase64 ? {
     inlineData: {
       mimeType: 'image/png',
       data: cleanBase64(referenceImageBase64),
     },
-  };
+  } : null;
 
   let parts: any[] = [];
 
@@ -499,7 +500,7 @@ export const generatePortrait = async (
       Generate a stunning, ultra-realistic photograph that looks like a professionally shot and retouched influencer photo - the person should look their absolute best while maintaining natural believability and facial identity.
     `;
 
-    parts = [refImagePart, { text: sceneGenPrompt }];
+    parts = [refImagePart, { text: sceneGenPrompt }].filter(part => part !== null);
 
   } else {
     // Portrait Mode

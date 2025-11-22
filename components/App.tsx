@@ -159,7 +159,7 @@ const App: React.FC = () => {
   const handleGenerate = async () => {
     setError(null);
 
-    if (!referenceImage) {
+    if (!referenceImage && mode !== 'scene_gen') {
       setError("Please upload a reference face.");
       return;
     }
@@ -722,9 +722,9 @@ const App: React.FC = () => {
                 {/* Generate Button */}
                 <button
                   onClick={handleGenerate}
-                  disabled={isGenerating || !referenceImage || (mode === 'faceswap' && !targetImage)}
+                  disabled={isGenerating || (mode !== 'scene_gen' && !referenceImage) || (mode === 'faceswap' && !targetImage)}
                   className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl flex items-center justify-center transition-all transform active:scale-[0.98]
-                    ${isGenerating || !referenceImage || (mode === 'faceswap' && !targetImage)
+                    ${isGenerating || (mode !== 'scene_gen' && !referenceImage) || (mode === 'faceswap' && !targetImage)
                       ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white shadow-brand-500/25 hover:shadow-brand-500/40'}
                   `}
