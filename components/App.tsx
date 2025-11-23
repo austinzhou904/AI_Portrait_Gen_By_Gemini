@@ -3,7 +3,23 @@ import { ImageUploader } from './ImageUploader';
 import { PresetSelector } from './PresetSelector';
 import { HistoryGallery } from './HistoryGallery';
 import { generatePortrait } from '../services/geminiService';
-import { AspectRatio, PresetScenario, AppMode, HistoryItem, FashionParams, AgeTransformParams, HairstyleParams, TattooParams, PhotographyParams, PoseParams, SceneGenParams } from '../types';
+import { TravelControls } from './TravelControls';
+import {
+  AppMode,
+  AspectRatio,
+  PresetScenario,
+  HistoryItem,
+  FashionParams,
+  AgeTransformParams,
+  HairstyleParams,
+  TattooParams,
+  PhotographyParams,
+  PoseParams,
+  SceneGenParams,
+  FreeModeParams,
+  HanfuParams,
+  TravelParams
+} from '../types';
 import { FashionControls } from './FashionControls';
 import { AgeControls } from './AgeControls';
 import { HairstyleControls } from './HairstyleControls';
@@ -11,6 +27,8 @@ import { TattooControls } from './TattooControls';
 import { PhotographyControls } from './PhotographyControls';
 import { PoseControls } from './PoseControls';
 import { SceneGenControls } from './SceneGenControls';
+import { FreeModeControls } from './FreeModeControls';
+import { HanfuControls } from './HanfuControls';
 import { ASPECT_RATIOS } from '../constants';
 
 const getRatioIconClass = (ratio: string) => {
@@ -111,6 +129,26 @@ const App: React.FC = () => {
     atmosphere: 'casual'
   });
 
+  const [freeModeParams, setFreeModeParams] = useState<FreeModeParams>({
+    images: [],
+    prompt: ''
+  });
+
+  const [hanfuParams, setHanfuParams] = useState<HanfuParams>({
+    selectedDynasty: 'tang',
+    selectedMakeup: 'natural',
+    selectedAccessory: 'minimal',
+    selectedBackground: 'garden'
+  });
+
+  const [travelParams, setTravelParams] = useState<TravelParams>({
+    country: 'china',
+    season: 'spring',
+    festival: 'none',
+    landmark: '',
+    timeOfDay: 'afternoon'
+  });
+
   // Load history from server on mount
   useEffect(() => {
     fetchHistory();
@@ -159,9 +197,20 @@ const App: React.FC = () => {
   const handleGenerate = async () => {
     setError(null);
 
-    if (!referenceImage && mode !== 'scene_gen') {
+    if (!referenceImage && mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel') {
       setError("Please upload a reference face.");
       return;
+    }
+
+    if (mode === 'free_mode') {
+      if (freeModeParams.images.length === 0) {
+        setError("Please upload at least one reference image.");
+        return;
+      }
+      if (!freeModeParams.prompt.trim()) {
+        setError("Please enter a prompt describing how to use the images.");
+        return;
+      }
     }
 
     if (mode === 'portrait') {
@@ -197,7 +246,10 @@ const App: React.FC = () => {
         tattooParams,
         photographyParams,
         poseParams,
-        sceneGenParams
+        sceneGenParams,
+        freeModeParams,
+        hanfuParams,
+        travelParams
       );
 
       // Save to local server
@@ -225,7 +277,10 @@ const App: React.FC = () => {
             ageParams,
             hairstyleParams,
             tattooParams,
-            photographyParams
+            photographyParams,
+            poseParams,
+            sceneGenParams,
+            freeModeParams
           }),
         });
 
@@ -259,13 +314,11 @@ const App: React.FC = () => {
       <header className="border-b border-slate-800 bg-[#0f172a]/90 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-brand-400 to-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/20">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+            <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center shadow-lg shadow-yellow-500/20 text-xl">
+              🍌
             </div>
-            <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-              PortraitGenius AI
+            <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-yellow-500">
+              Nano Banana Studio
             </h1>
           </div>
 
@@ -298,8 +351,8 @@ const App: React.FC = () => {
               onChange={(e) => setSelectedModel(e.target.value)}
               className="text-xs bg-slate-900 border border-slate-700 rounded-full px-3 py-1 text-slate-300 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
             >
-              <option value="gemini-2.5-flash-image">Gemini 2.5 Flash</option>
-              <option value="gemini-3-pro-image-preview">Gemini 3 Pro</option>
+              <option value="gemini-2.5-flash-image">Nano Banana</option>
+              <option value="gemini-3-pro-image-preview">Nano Banana Pro</option>
             </select>
           </div>
         </div>
@@ -366,7 +419,7 @@ const App: React.FC = () => {
                   >
                     <div className="flex flex-col items-center">
                       <span className="text-base mb-0.5">✨</span>
-                      <span className="text-xs">Converter</span>
+                      <span className="text-xs">动漫风格</span>
                     </div>
                   </button>
                   <button
@@ -424,7 +477,7 @@ const App: React.FC = () => {
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
                       }`}
                   >
-                    <div className="flex flexcol items-center">
+                    <div className="flex flex-col items-center">
                       <span className="text-base mb-0.5">📷</span>
                       <span className="text-xs">Photography</span>
                     </div>
@@ -451,6 +504,42 @@ const App: React.FC = () => {
                     <div className="flex flex-col items-center">
                       <span className="text-base mb-0.5">🎬</span>
                       <span className="text-xs">网红</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('free_mode'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'free_mode'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">✨</span>
+                      <span className="text-xs">Free Mode</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('hanfu'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'hanfu'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🏮</span>
+                      <span className="text-xs">汉服</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('travel'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'travel'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">✈️</span>
+                      <span className="text-xs">旅行</span>
                     </div>
                   </button>
                 </div>
@@ -628,6 +717,7 @@ const App: React.FC = () => {
                             { id: 'african', name: 'African', desc: 'Black/African Descent' },
                             { id: 'south_asian', name: 'South Asian', desc: 'Indian/Pakistani' },
                             { id: 'hispanic', name: 'Hispanic', desc: 'Latino/Hispanic' },
+                            { id: 'none', name: 'None / Other', desc: 'Fantasy / Non-human' },
                           ].map((eth) => (
                             <button
                               key={eth.id}
@@ -707,6 +797,57 @@ const App: React.FC = () => {
                       />
                     </div>
                   </>
+                ) : mode === 'free_mode' ? (
+                  <>
+                    {/* Free Mode Controls */}
+                    <div className="mb-8">
+                      <FreeModeControls
+                        freeModeParams={freeModeParams}
+                        onChange={setFreeModeParams}
+                      />
+                    </div>
+                  </>
+                ) : mode === 'hanfu' ? (
+                  <>
+                    {/* Hanfu Dress-up Controls */}
+                    <div className="mb-8">
+                      <HanfuControls
+                        hanfuParams={hanfuParams}
+                        onChange={setHanfuParams}
+                      />
+                    </div>
+                  </>
+                ) : mode === 'travel' ? (
+                  <>
+                    <TravelControls
+                      travelParams={travelParams}
+                      onChange={setTravelParams}
+                    />
+
+                    <div className="mt-6 mb-8">
+                      <label className="block text-sm font-medium text-slate-300 mb-2">
+                        5. Aspect Ratio
+                      </label>
+                      <div className="grid grid-cols-5 gap-2">
+                        {ASPECT_RATIOS.map((ratio) => (
+                          <button
+                            key={ratio.value}
+                            onClick={() => setAspectRatio(ratio.value)}
+                            className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all
+                              ${aspectRatio === ratio.value
+                                ? 'bg-brand-600 border-brand-500 text-white shadow-lg shadow-brand-500/25'
+                                : 'bg-slate-900 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-500'}
+                            `}
+                            title={ratio.label}
+                          >
+                            <div className={`mb-1 border-2 rounded-sm ${aspectRatio === ratio.value ? 'border-white' : 'border-current'
+                              } ${getRatioIconClass(ratio.value)}`} />
+                            <span className="text-[10px] font-medium">{ratio.value}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </>
                 ) : (
                   <>
                     {/* Fashion Studio Mode Controls */}
@@ -722,9 +863,9 @@ const App: React.FC = () => {
                 {/* Generate Button */}
                 <button
                   onClick={handleGenerate}
-                  disabled={isGenerating || (mode !== 'scene_gen' && !referenceImage) || (mode === 'faceswap' && !targetImage)}
+                  disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && !referenceImage) || (mode === 'faceswap' && !targetImage)}
                   className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl flex items-center justify-center transition-all transform active:scale-[0.98]
-                    ${isGenerating || (mode !== 'scene_gen' && !referenceImage) || (mode === 'faceswap' && !targetImage)
+                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && !referenceImage) || (mode === 'faceswap' && !targetImage)
                       ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white shadow-brand-500/25 hover:shadow-brand-500/40'}
                   `}
@@ -735,11 +876,11 @@ const App: React.FC = () => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : mode === 'photography' ? 'Generating Photo...' : mode === 'pose_transfer' ? 'Transferring Pose...' : mode === 'scene_gen' ? 'Generating Scene...' : 'Converting...'}
+                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : mode === 'photography' ? 'Generating Photo...' : mode === 'pose_transfer' ? 'Transferring Pose...' : mode === 'scene_gen' ? 'Generating Scene...' : mode === 'travel' ? 'Traveling...' : 'Converting...'}
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : 'Create Look'}
+                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : mode === 'free_mode' ? 'Creative Generate' : mode === 'travel' ? 'Start Travel' : 'Create Look'}
                     </>
                   )}
                 </button>

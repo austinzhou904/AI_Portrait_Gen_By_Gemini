@@ -6,7 +6,7 @@ export enum AspectRatio {
   Ratio_16_9 = '16:9',
 }
 
-export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography' | 'pose_transfer' | 'scene_gen';
+export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography' | 'pose_transfer' | 'scene_gen' | 'free_mode' | 'hanfu' | 'travel';
 
 export interface FashionParams {
   glasses: string;
@@ -96,6 +96,46 @@ export interface SceneGenParams {
   timeOfDay: string;
   weather: string;
   atmosphere: string;
+}
+
+export interface FreeModeParams {
+  images: string[];
+  prompt: string;
+}
+
+export interface HanfuParams {
+  description: string;
+  imagePrompt: string;
+}
+
+export interface MakeupOption {
+  id: string;
+  name: string;
+  description: string;
+  promptDetail: string;
+}
+
+export interface AccessoryOption {
+  id: string;
+  name: string;
+  description: string;
+  promptDetail: string;
+}
+
+export interface HanfuBackgroundOption {
+  id: string;
+  name: string;
+  description: string;
+  promptDetail: string;
+}
+
+export interface CharacterPreset {
+  id: string;
+  displayName: string;    // 显示给用户
+  promptName: string;      // 在prompt中使用（含定语）
+  ethnicity: string;
+  ageGroup: string;
+  gender: string;
 }
 
 export interface PresetScenario {

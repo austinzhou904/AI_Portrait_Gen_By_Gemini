@@ -75,6 +75,77 @@ export const LIGHTING_OPTIONS = [
     { id: 'backlight', label: 'Backlight', desc: 'Light from behind subject' },
 ];
 
+// Subject Options
+export const SUBJECT_TYPE_OPTIONS = [
+    { id: 'portrait', label: 'Portrait', desc: 'Traditional portrait' },
+    { id: 'candid', label: 'Candid', desc: 'Natural, unposed' },
+    { id: 'fashion', label: 'Fashion', desc: 'Fashion/editorial style' },
+    { id: 'action', label: 'Action', desc: 'Dynamic movement' },
+];
+
+export const GENDER_OPTIONS = [
+    { id: 'female', label: 'Female' },
+    { id: 'male', label: 'Male' },
+    { id: 'non-binary', label: 'Non-binary' },
+];
+
+export const AGE_OPTIONS = [
+    { id: 'child', label: 'Child', desc: '5-12 years' },
+    { id: 'teen', label: 'Teen', desc: '13-19 years' },
+    { id: 'young adult', label: 'Young Adult', desc: '20-35 years' },
+    { id: 'adult', label: 'Adult', desc: '36-60 years' },
+    { id: 'elderly', label: 'Elderly', desc: '60+ years' },
+];
+
+// Style Options
+export const STYLE_TYPE_OPTIONS = [
+    { id: 'photorealistic', label: 'Photorealistic', desc: 'True-to-life photography' },
+    { id: 'cinematic', label: 'Cinematic', desc: 'Movie-like aesthetic' },
+    { id: 'artistic', label: 'Artistic', desc: 'Creative interpretation' },
+    { id: 'vintage', label: 'Vintage', desc: 'Retro film look' },
+    { id: 'black_and_white', label: 'Black & White', desc: 'Monochrome photography' },
+];
+
+export const FILM_GRAIN_OPTIONS = [
+    { id: 'none', label: 'None', desc: 'Clean, digital' },
+    { id: 'fine', label: 'Fine', desc: 'Subtle grain' },
+    { id: 'medium', label: 'Medium', desc: 'Visible grain' },
+    { id: 'coarse', label: 'Coarse', desc: 'Heavy grain' },
+];
+
+export const COLOR_GRADING_OPTIONS = [
+    { id: 'natural', label: 'Natural', desc: 'True colors' },
+    { id: 'cinematic', label: 'Cinematic', desc: 'Movie-like colors' },
+    { id: 'warm', label: 'Warm', desc: 'Orange/yellow tones' },
+    { id: 'cool', label: 'Cool', desc: 'Blue/cyan tones' },
+    { id: 'vintage', label: 'Vintage', desc: 'Faded, retro colors' },
+    { id: 'black_and_white', label: 'Black & White', desc: 'Monochrome' },
+];
+
+// Lighting Direction Options
+export const LIGHTING_DIRECTION_OPTIONS = [
+    { id: 'front', label: 'Front', desc: 'Even, flattering' },
+    { id: 'side', label: 'Side', desc: 'Dramatic shadows' },
+    { id: 'back', label: 'Back', desc: 'Silhouette effect' },
+    { id: 'top', label: 'Top', desc: 'Overhead lighting' },
+    { id: 'rim', label: 'Rim', desc: 'Edge lighting' },
+];
+
+// Composition Options
+export const FRAMING_OPTIONS = [
+    { id: 'close-up', label: 'Close-up', desc: 'Head and shoulders' },
+    { id: 'medium shot', label: 'Medium Shot', desc: 'Waist up' },
+    { id: 'full body', label: 'Full Body', desc: 'Entire figure' },
+    { id: 'rule of thirds', label: 'Rule of Thirds', desc: 'Off-center composition' },
+    { id: 'center', label: 'Center', desc: 'Centered subject' },
+];
+
+export const DEPTH_OF_FIELD_OPTIONS = [
+    { id: 'shallow', label: 'Shallow', desc: 'Blurred background' },
+    { id: 'medium', label: 'Medium', desc: 'Balanced focus' },
+    { id: 'deep', label: 'Deep', desc: 'Everything sharp' },
+];
+
 // Photography Presets
 export interface PhotographyPreset {
     id: string;

@@ -10,6 +10,15 @@ import {
     ATMOSPHERE_OPTIONS,
     WEATHER_OPTIONS,
     LIGHTING_OPTIONS,
+    SUBJECT_TYPE_OPTIONS,
+    GENDER_OPTIONS,
+    AGE_OPTIONS,
+    STYLE_TYPE_OPTIONS,
+    FILM_GRAIN_OPTIONS,
+    COLOR_GRADING_OPTIONS,
+    LIGHTING_DIRECTION_OPTIONS,
+    FRAMING_OPTIONS,
+    DEPTH_OF_FIELD_OPTIONS,
     PHOTOGRAPHY_PRESETS,
     SUBJECT_EXAMPLES,
     LOCATION_EXAMPLES,
@@ -297,155 +306,339 @@ export const PhotographyControls: React.FC<PhotographyControlsProps> = ({
                     {/* Guided Prompts Tab */}
                     {activeTab === 'guided' && (
                         <div className="space-y-4 animate-fadeIn">
-                            <div className="grid grid-cols-2 gap-4">
-                                {/* Subject */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Subject (Who)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={photographyParams.subject}
-                                        onChange={(e) => updateParam('subject', e.target.value)}
-                                        placeholder="e.g., A young woman in her 20s"
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                                    />
-                                    <div className="mt-1 text-[10px] text-slate-500">
-                                        Examples: {SUBJECT_EXAMPLES.slice(0, 2).join(', ')}
+                            {/* Subject Section */}
+                            <div className="p-4 bg-slate-800/30 rounded-lg border border-slate-700">
+                                <h3 className="text-sm font-medium text-slate-200 mb-3">Subject</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {/* Subject Type */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Type
+                                        </label>
+                                        <select
+                                            value={photographyParams.subjectType || 'portrait'}
+                                            onChange={(e) => updateParam('subjectType', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {SUBJECT_TYPE_OPTIONS.map((type) => (
+                                                <option key={type.id} value={type.id}>
+                                                    {type.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Gender */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Gender
+                                        </label>
+                                        <select
+                                            value={photographyParams.subjectGender || 'female'}
+                                            onChange={(e) => updateParam('subjectGender', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {GENDER_OPTIONS.map((gender) => (
+                                                <option key={gender.id} value={gender.id}>
+                                                    {gender.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Age */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Age
+                                        </label>
+                                        <select
+                                            value={photographyParams.subjectAge || 'young adult'}
+                                            onChange={(e) => updateParam('subjectAge', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {AGE_OPTIONS.map((age) => (
+                                                <option key={age.id} value={age.id}>
+                                                    {age.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Expression */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Expression
+                                        </label>
+                                        <select
+                                            value={photographyParams.expression}
+                                            onChange={(e) => updateParam('expression', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {EXPRESSION_OPTIONS.map((exp) => (
+                                                <option key={exp} value={exp}>
+                                                    {exp}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Subject Description */}
+                                    <div className="col-span-2">
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Subject Description (Optional)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={photographyParams.subject}
+                                            onChange={(e) => updateParam('subject', e.target.value)}
+                                            placeholder="e.g., A young woman in her 20s"
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        />
+                                        <div className="mt-1 text-[10px] text-slate-500">
+                                            Examples: {SUBJECT_EXAMPLES.slice(0, 2).join(', ')}
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* Location */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Location (Where)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={photographyParams.location}
-                                        onChange={(e) => updateParam('location', e.target.value)}
-                                        placeholder="e.g., Urban street corner"
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                                    />
-                                    <div className="mt-1 text-[10px] text-slate-500">
-                                        Examples: {LOCATION_EXAMPLES.slice(0, 2).join(', ')}
+                            {/* Style Section */}
+                            <div className="p-4 bg-slate-800/30 rounded-lg border border-slate-700">
+                                <h3 className="text-sm font-medium text-slate-200 mb-3">Style</h3>
+                                <div className="grid grid-cols-3 gap-4">
+                                    {/* Style Type */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Type
+                                        </label>
+                                        <select
+                                            value={photographyParams.styleType || 'photorealistic'}
+                                            onChange={(e) => updateParam('styleType', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {STYLE_TYPE_OPTIONS.map((style) => (
+                                                <option key={style.id} value={style.id}>
+                                                    {style.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Film Grain */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Film Grain
+                                        </label>
+                                        <select
+                                            value={photographyParams.filmGrain || 'medium'}
+                                            onChange={(e) => updateParam('filmGrain', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {FILM_GRAIN_OPTIONS.map((grain) => (
+                                                <option key={grain.id} value={grain.id}>
+                                                    {grain.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Color Grading */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Color Grading
+                                        </label>
+                                        <select
+                                            value={photographyParams.colorGrading || 'cinematic'}
+                                            onChange={(e) => updateParam('colorGrading', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {COLOR_GRADING_OPTIONS.map((grading) => (
+                                                <option key={grading.id} value={grading.id}>
+                                                    {grading.label}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* Expression */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Expression
-                                    </label>
-                                    <select
-                                        value={photographyParams.expression}
-                                        onChange={(e) => updateParam('expression', e.target.value)}
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                                    >
-                                        {EXPRESSION_OPTIONS.map((exp) => (
-                                            <option key={exp} value={exp}>
-                                                {exp}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                            {/* Scene & Lighting Section */}
+                            <div className="p-4 bg-slate-800/30 rounded-lg border border-slate-700">
+                                <h3 className="text-sm font-medium text-slate-200 mb-3">Scene & Lighting</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {/* Location */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Location (Where)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={photographyParams.location}
+                                            onChange={(e) => updateParam('location', e.target.value)}
+                                            placeholder="e.g., Urban street corner"
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        />
+                                        <div className="mt-1 text-[10px] text-slate-500">
+                                            Examples: {LOCATION_EXAMPLES.slice(0, 2).join(', ')}
+                                        </div>
+                                    </div>
 
-                                {/* Action */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Action
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={photographyParams.action}
-                                        onChange={(e) => updateParam('action', e.target.value)}
-                                        placeholder="e.g., Walking confidently"
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                                    />
-                                    <div className="mt-1 text-[10px] text-slate-500">
-                                        Examples: {ACTION_EXAMPLES.slice(0, 2).join(', ')}
+                                    {/* Action */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Action
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={photographyParams.action}
+                                            onChange={(e) => updateParam('action', e.target.value)}
+                                            placeholder="e.g., Walking confidently"
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        />
+                                        <div className="mt-1 text-[10px] text-slate-500">
+                                            Examples: {ACTION_EXAMPLES.slice(0, 2).join(', ')}
+                                        </div>
+                                    </div>
+
+                                    {/* Background */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Background
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={photographyParams.background}
+                                            onChange={(e) => updateParam('background', e.target.value)}
+                                            placeholder="e.g., Blurred city lights"
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        />
+                                        <div className="mt-1 text-[10px] text-slate-500">
+                                            Examples: {BACKGROUND_EXAMPLES.slice(0, 2).join(', ')}
+                                        </div>
+                                    </div>
+
+                                    {/* Atmosphere */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Atmosphere
+                                        </label>
+                                        <select
+                                            value={photographyParams.atmosphere}
+                                            onChange={(e) => updateParam('atmosphere', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {ATMOSPHERE_OPTIONS.map((atm) => (
+                                                <option key={atm} value={atm}>
+                                                    {atm}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Weather */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Weather
+                                        </label>
+                                        <select
+                                            value={photographyParams.weather}
+                                            onChange={(e) => updateParam('weather', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {WEATHER_OPTIONS.map((weather) => (
+                                                <option key={weather} value={weather}>
+                                                    {weather}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Lighting Direction */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Lighting Direction
+                                        </label>
+                                        <select
+                                            value={photographyParams.lightingDirection || 'side'}
+                                            onChange={(e) => updateParam('lightingDirection', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {LIGHTING_DIRECTION_OPTIONS.map((dir) => (
+                                                <option key={dir.id} value={dir.id}>
+                                                    {dir.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Lighting Type */}
+                                    <div className="col-span-2">
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Lighting Type
+                                        </label>
+                                        <div className="grid grid-cols-4 gap-2">
+                                            {LIGHTING_OPTIONS.map((light) => {
+                                                const isSelected = photographyParams.lighting === light.id;
+                                                return (
+                                                    <button
+                                                        key={light.id}
+                                                        onClick={() => updateParam('lighting', light.id)}
+                                                        className={`p-2 rounded-lg border text-left transition-all ${isSelected
+                                                            ? 'bg-brand-600 border-brand-500 shadow-lg'
+                                                            : 'bg-slate-800/50 border-slate-700 hover:bg-slate-800 hover:border-brand-500'
+                                                            }`}
+                                                    >
+                                                        <div className={`font-medium text-xs ${isSelected ? 'text-white' : 'text-white'}`}>
+                                                            {light.label}
+                                                        </div>
+                                                        <div className={`text-[10px] ${isSelected ? 'text-brand-100' : 'text-slate-400'}`}>
+                                                            {light.desc}
+                                                        </div>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* Background */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Background
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={photographyParams.background}
-                                        onChange={(e) => updateParam('background', e.target.value)}
-                                        placeholder="e.g., Blurred city lights"
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                                    />
-                                    <div className="mt-1 text-[10px] text-slate-500">
-                                        Examples: {BACKGROUND_EXAMPLES.slice(0, 2).join(', ')}
+                            {/* Composition Section */}
+                            <div className="p-4 bg-slate-800/30 rounded-lg border border-slate-700">
+                                <h3 className="text-sm font-medium text-slate-200 mb-3">Composition</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {/* Framing */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Framing
+                                        </label>
+                                        <select
+                                            value={photographyParams.framing || 'rule of thirds'}
+                                            onChange={(e) => updateParam('framing', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {FRAMING_OPTIONS.map((frame) => (
+                                                <option key={frame.id} value={frame.id}>
+                                                    {frame.label}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
-                                </div>
 
-                                {/* Atmosphere */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Atmosphere
-                                    </label>
-                                    <select
-                                        value={photographyParams.atmosphere}
-                                        onChange={(e) => updateParam('atmosphere', e.target.value)}
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                                    >
-                                        {ATMOSPHERE_OPTIONS.map((atm) => (
-                                            <option key={atm} value={atm}>
-                                                {atm}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* Weather */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Weather
-                                    </label>
-                                    <select
-                                        value={photographyParams.weather}
-                                        onChange={(e) => updateParam('weather', e.target.value)}
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                                    >
-                                        {WEATHER_OPTIONS.map((weather) => (
-                                            <option key={weather} value={weather}>
-                                                {weather}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* Lighting */}
-                                <div className="col-span-2">
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Lighting
-                                    </label>
-                                    <div className="grid grid-cols-4 gap-2">
-                                        {LIGHTING_OPTIONS.map((light) => {
-                                            const isSelected = photographyParams.lighting === light.id;
-                                            return (
-                                                <button
-                                                    key={light.id}
-                                                    onClick={() => updateParam('lighting', light.id)}
-                                                    className={`p-2 rounded-lg border text-left transition-all ${isSelected
-                                                        ? 'bg-brand-600 border-brand-500 shadow-lg'
-                                                        : 'bg-slate-800/50 border-slate-700 hover:bg-slate-800 hover:border-brand-500'
-                                                        }`}
-                                                >
-                                                    <div className={`font-medium text-xs ${isSelected ? 'text-white' : 'text-white'}`}>
-                                                        {light.label}
-                                                    </div>
-                                                    <div className={`text-[10px] ${isSelected ? 'text-brand-100' : 'text-slate-400'}`}>
-                                                        {light.desc}
-                                                    </div>
-                                                </button>
-                                            );
-                                        })}
+                                    {/* Depth of Field */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                                            Depth of Field
+                                        </label>
+                                        <select
+                                            value={photographyParams.depthOfField || 'shallow'}
+                                            onChange={(e) => updateParam('depthOfField', e.target.value)}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                        >
+                                            {DEPTH_OF_FIELD_OPTIONS.map((dof) => (
+                                                <option key={dof.id} value={dof.id}>
+                                                    {dof.label}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
