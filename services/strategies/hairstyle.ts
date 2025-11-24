@@ -14,12 +14,14 @@ export class HairstyleStrategy implements GenerationStrategy {
                 data: cleanBase64(referenceImageBase64),
             },
         } : null;
-
         const hairstylePrompt = `
       Task: Hairstyle Modification - Change only the hairstyle while preserving everything else.
       
       Reference Image: The attached image shows the person whose hairstyle needs to be changed.
       
+      ${hairstyle === 'nine_grid_recommendation' ? `
+      根据我提供的图片，提供9种不同的韩流发型设计，输出在一张照片，特写不同的发型进行展示
+      ` : `
       Target Hairstyle: ${hairstyle ? hairstyle.replace(/_/g, ' ') : 'Modern styled hair'}
       
       CRITICAL Constraints:
@@ -30,6 +32,7 @@ export class HairstyleStrategy implements GenerationStrategy {
       5. QUALITY: Generate a high-quality, photorealistic image with detailed hair texture.
       6. ASPECT RATIO: Maintain the same aspect ratio as the reference image.
       7. SEAMLESS BLEND: Ensure the hairline and hair edges blend naturally with the forehead and face.
+      `}
       
       Remember: This is ONLY a hairstyle change. The person's face and identity must be perfectly preserved.
     `;

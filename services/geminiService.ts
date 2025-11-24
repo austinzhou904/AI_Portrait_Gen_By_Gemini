@@ -12,6 +12,13 @@ import { SceneGenStrategy } from "./strategies/sceneGen";
 import { PortraitStrategy } from "./strategies/portrait";
 import { HanfuStrategy } from "./strategies/hanfu";
 import { TravelStrategy } from "./strategies/travel";
+import { TriptychStrategy } from "./strategies/triptych";
+import { PetMerchStrategy } from "./strategies/petMerch";
+import { ProductFoodStrategy } from "./strategies/productFood";
+import { FigureStrategy } from "./strategies/figure";
+import { BeautyStrategy } from "./strategies/beauty";
+
+declare const process: any;
 
 const getClient = () => {
   console.log('[DEBUG] API Key Check:');
@@ -47,6 +54,11 @@ const strategies: Record<string, GenerationStrategy> = {
   'scene_gen': new SceneGenStrategy(),
   'hanfu': new HanfuStrategy(),
   'travel': new TravelStrategy(),
+  'triptych': new TriptychStrategy(),
+  'pet_merch': new PetMerchStrategy(),
+  'product_food': new ProductFoodStrategy(),
+  'figure': new FigureStrategy(),
+  'beauty': new BeautyStrategy(),
   // Map undefined modes to PortraitStrategy for now (replicating original behavior)
   'free_mode': new PortraitStrategy(),
   'pose_transfer': new PortraitStrategy(),
@@ -72,7 +84,12 @@ export const generatePortrait = async (
   sceneGenParams?: any,
   freeModeParams?: any,
   hanfuParams?: any,
-  travelParams?: any // Added travelParams support
+  travelParams?: any,
+  triptychParams?: any,
+  petMerchParams?: any,
+  productFoodParams?: any,
+  figureParams?: any,
+  beautyParams?: any
 ): Promise<string> => {
   const ai = getClient();
 
@@ -96,17 +113,33 @@ export const generatePortrait = async (
     sceneGenParams,
     freeModeParams,
     hanfuParams,
-    travelParams
+    travelParams,
+    triptychParams,
+    petMerchParams,
+    productFoodParams,
+    figureParams,
+    beautyParams
   };
 
   try {
     const parts = await strategy.buildParts(context);
+
+    // Map our aspect ratio format to Gemini API format
+    const aspectRatioMap: Record<string, string> = {
+      '3:4': '3:4',
+      '4:3': '4:3',
+      '1:1': '1:1',
+      '9:16': '9:16',
+      '16:9': '16:9'
+    };
 
     const response = await ai.models.generateContent({
       model: model,
       contents: { parts },
       config: {
         responseModalities: [Modality.IMAGE],
+        aspectRatio: aspectRatioMap[ratio] || '1:1',
+        imageSize: '2K', // Force 2K resolution output
       },
     });
 

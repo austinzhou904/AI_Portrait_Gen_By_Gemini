@@ -21,6 +21,10 @@ export interface GenerationContext {
     hanfuParams?: any;
     freeModeParams?: any;
     travelParams?: any;
+    triptychParams?: any;
+    petMerchParams?: any;
+    productFoodParams?: any;
+    figureParams?: any;
 }
 
 export interface GenerationStrategy {

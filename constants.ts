@@ -11,6 +11,13 @@ export const ASPECT_RATIOS = [
 export const PRESETS: PresetScenario[] = [
   // --- Everyday & Lifestyle ---
   {
+    id: 'id_photo',
+    name: 'ID Photo (证件照)',
+    description: 'Professional ID photo, white background.',
+    promptModifier: 'Professional ID photo portrait, neutral white background, even lighting, facing forward, neutral expression, formal attire, clean and sharp, high resolution.',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&q=80'
+  },
+  {
     id: 'cafe_lifestyle',
     name: 'Coffee Shop',
     description: 'Casual, window light, cozy cafe vibe.',
@@ -154,13 +161,7 @@ export const PRESETS: PresetScenario[] = [
   },
 
   // --- Artistic & Studio ---
-  {
-    id: 'studio_bw',
-    name: 'Black & White',
-    description: 'Classic monochrome, high contrast.',
-    promptModifier: 'Classic black and white studio portrait, high contrast lighting, deep blacks and bright highlights, plain black background, dramatic and timeless look, Leica style.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&h=150&fit=crop&q=80'
-  },
+
   {
     id: 'film_grain',
     name: 'Vintage Film',

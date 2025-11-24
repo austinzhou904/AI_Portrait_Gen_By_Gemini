@@ -152,6 +152,7 @@ export interface PhotographyPreset {
     name: string;
     description: string;
     params: Partial<PhotographyParams>;
+    promptModifier?: string;
 }
 
 export const PHOTOGRAPHY_PRESETS: PhotographyPreset[] = [
@@ -256,6 +257,33 @@ export const PHOTOGRAPHY_PRESETS: PhotographyPreset[] = [
             lensType: 'telephoto'
         }
     },
+    {
+        id: 'id_photo',
+        name: '证件照 (ID Photo)',
+        description: '标准证件照，正面朝前，蓝色或白色背景，4x2网格排列',
+        params: {
+            generationMode: 'image-to-image',
+            subject: 'Professional portrait',
+            location: 'Studio',
+            expression: 'Neutral, professional',
+            action: 'Facing forward',
+            background: 'Solid blue or white background',
+            atmosphere: 'Clean, professional',
+            weather: 'Indoor',
+            lighting: 'Soft studio lighting',
+            aperture: 'f/8',
+            focalLength: '85mm',
+            iso: '100',
+            shutterSpeed: '1/125s',
+            lensType: 'Portrait lens'
+        },
+        promptModifier: `制作成一张标准的证件照。
+人物正面朝前，穿着得体（如西装或职业装）。
+背景是纯蓝色或纯白色。
+光线均匀，无阴影。
+排版成 4行 x 2列 的网格排列在纸上（4cm x 3cm 尺寸）。
+画质清晰，符合证件照规范。`
+    }
 ];
 
 // Example prompts for guidance
@@ -275,6 +303,8 @@ export const LOCATION_EXAMPLES = [
     'Cozy cafe',
     'Forest clearing'
 ];
+
+
 
 export const ACTION_EXAMPLES = [
     'Walking confidently',

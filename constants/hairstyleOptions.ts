@@ -40,6 +40,25 @@ export interface HairstylePreset {
 }
 
 export const HAIRSTYLE_PRESETS: HairstylePreset[] = [
+    // Special Presets
+    {
+        id: 'female_nine_grid',
+        name: '9-Grid Hairstyle Guide',
+        gender: 'female',
+        description: 'Generate 9 recommended hairstyles',
+        params: {
+            hairstyle: 'nine_grid_recommendation'
+        }
+    },
+    {
+        id: 'male_nine_grid',
+        name: '9-Grid Hairstyle Guide',
+        gender: 'male',
+        description: 'Generate 9 recommended hairstyles',
+        params: {
+            hairstyle: 'nine_grid_recommendation'
+        }
+    },
     // Male Presets
     {
         id: 'male_professional',

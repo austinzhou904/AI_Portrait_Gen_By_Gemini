@@ -4,6 +4,11 @@ import { PresetSelector } from './PresetSelector';
 import { HistoryGallery } from './HistoryGallery';
 import { generatePortrait } from '../services/geminiService';
 import { TravelControls } from './TravelControls';
+import { TriptychControls } from './TriptychControls';
+import { PetMerchControls } from './PetMerchControls';
+import { ProductFoodControls } from './ProductFoodControls';
+import { FigureControls } from './FigureControls';
+import { BeautyControls } from './BeautyControls';
 import {
   AppMode,
   AspectRatio,
@@ -18,7 +23,12 @@ import {
   SceneGenParams,
   FreeModeParams,
   HanfuParams,
-  TravelParams
+  TravelParams,
+  TriptychParams,
+  PetMerchParams,
+  ProductFoodParams,
+  FigureParams,
+  BeautyParams
 } from '../types';
 import { FashionControls } from './FashionControls';
 import { AgeControls } from './AgeControls';
@@ -30,6 +40,7 @@ import { SceneGenControls } from './SceneGenControls';
 import { FreeModeControls } from './FreeModeControls';
 import { HanfuControls } from './HanfuControls';
 import { ASPECT_RATIOS } from '../constants';
+import { DEFAULT_FIGURE_PROMPT } from '../constants/figureOptions';
 
 const getRatioIconClass = (ratio: string) => {
   switch (ratio) {
@@ -146,7 +157,32 @@ const App: React.FC = () => {
     season: 'spring',
     festival: 'none',
     landmark: '',
-    timeOfDay: 'afternoon'
+    timeOfDay: 'afternoon',
+    cameraPosition: 'eye_level',
+    lens: 'standard_50mm',
+    pitchAngle: 'level_0',
+    shotType: 'half_body'
+  });
+
+  const [triptychParams, setTriptychParams] = useState<TriptychParams>({
+    selectedPreset: 'snow_triptych'
+  });
+
+  const [petMerchParams, setPetMerchParams] = useState<PetMerchParams>({
+    selectedPreset: 'pet_stamp'
+  });
+
+  const [productFoodParams, setProductFoodParams] = useState<ProductFoodParams>({
+    selectedPreset: 'ultimate_rice_bowl'
+  });
+
+  const [figureParams, setFigureParams] = useState<FigureParams>({
+    selectedPreset: 'scale_figure',
+    prompt: DEFAULT_FIGURE_PROMPT
+  });
+
+  const [beautyParams, setBeautyParams] = useState<BeautyParams>({
+    selectedOptions: []
   });
 
   // Load history from server on mount
@@ -249,7 +285,12 @@ const App: React.FC = () => {
         sceneGenParams,
         freeModeParams,
         hanfuParams,
-        travelParams
+        travelParams,
+        triptychParams,
+        petMerchParams,
+        productFoodParams,
+        figureParams,
+        beautyParams
       );
 
       // Save to local server
@@ -280,7 +321,12 @@ const App: React.FC = () => {
             photographyParams,
             poseParams,
             sceneGenParams,
-            freeModeParams
+            freeModeParams,
+            triptychParams,
+            petMerchParams,
+            productFoodParams,
+            figureParams,
+            beautyParams
           }),
         });
 
@@ -542,6 +588,66 @@ const App: React.FC = () => {
                       <span className="text-xs">旅行</span>
                     </div>
                   </button>
+                  <button
+                    onClick={() => { setMode('triptych'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'triptych'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🎞️</span>
+                      <span className="text-xs">三连拍</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('pet_merch'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'pet_merch'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🐾</span>
+                      <span className="text-xs">萌宠周边</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('product_food'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'product_food'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🛍️</span>
+                      <span className="text-xs">商品美食</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('figure'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'figure'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🧸</span>
+                      <span className="text-xs">手办</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('beauty'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'beauty'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">✨</span>
+                      <span className="text-xs">美颜</span>
+                    </div>
+                  </button>
                 </div>
               </div>
 
@@ -615,6 +721,11 @@ const App: React.FC = () => {
                       </div>
                     </div>
                   </>
+                ) : mode === 'beauty' ? (
+                  <BeautyControls
+                    params={beautyParams}
+                    onChange={setBeautyParams}
+                  />
                 ) : mode === 'faceswap' ? (
                   <>
                     {/* Face Swap Mode Controls */}
@@ -690,6 +801,15 @@ const App: React.FC = () => {
                             { id: 'toriyama', name: 'Toriyama', desc: 'Dragon Ball Style' },
                             { id: 'katsura', name: 'Katsura', desc: 'Video Girl Ai / I"s' },
                             { id: 'shinkai', name: 'Shinkai', desc: 'Your Name Style' },
+                            { id: 'jojo', name: 'JoJo', desc: 'JoJo\'s Bizarre Adventure' },
+                            { id: 'saint_seiya', name: 'Saint Seiya', desc: 'Saint Seiya Style' },
+                            { id: 'gintama', name: 'Gintama', desc: 'Gintama Style' },
+                            { id: 'shin_chan', name: 'Shin-chan', desc: 'Crayon Shin-chan' },
+                            { id: 'peppa', name: 'Peppa Pig', desc: 'Peppa Pig Style' },
+                            { id: 'sailor_moon', name: 'Sailor Moon', desc: 'Sailor Moon Style' },
+                            { id: 'aot', name: 'Attack on Titan', desc: 'Attack on Titan Style' },
+                            { id: 'marvel', name: 'Marvel', desc: 'Marvel Comic Style' },
+                            { id: 'junji_ito', name: 'Junji Ito', desc: 'Junji Ito Horror Style' },
                           ].map((style) => (
                             <button
                               key={style.id}
@@ -848,6 +968,34 @@ const App: React.FC = () => {
                       </div>
                     </div>
                   </>
+                ) : mode === 'triptych' ? (
+                  <>
+                    <TriptychControls
+                      triptychParams={triptychParams}
+                      onChange={setTriptychParams}
+                    />
+                  </>
+                ) : mode === 'pet_merch' ? (
+                  <>
+                    <PetMerchControls
+                      petMerchParams={petMerchParams}
+                      onChange={setPetMerchParams}
+                    />
+                  </>
+                ) : mode === 'product_food' ? (
+                  <>
+                    <ProductFoodControls
+                      productFoodParams={productFoodParams}
+                      onChange={setProductFoodParams}
+                    />
+                  </>
+                ) : mode === 'figure' ? (
+                  <>
+                    <FigureControls
+                      figureParams={figureParams}
+                      onChange={setFigureParams}
+                    />
+                  </>
                 ) : (
                   <>
                     {/* Fashion Studio Mode Controls */}
@@ -880,7 +1028,7 @@ const App: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : mode === 'free_mode' ? 'Creative Generate' : mode === 'travel' ? 'Start Travel' : 'Create Look'}
+                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : mode === 'free_mode' ? 'Creative Generate' : mode === 'travel' ? 'Start Travel' : mode === 'triptych' ? 'Generate Triptych' : mode === 'pet_merch' ? 'Generate Merch' : mode === 'product_food' ? 'Generate Product' : 'Create Look'}
                     </>
                   )}
                 </button>
@@ -955,7 +1103,15 @@ const App: React.FC = () => {
                                     ? 'Upload a photo and preview tattoos on your body.'
                                     : mode === 'photography'
                                       ? 'Create professional photos with guided prompts or image references.'
-                                      : 'Upload a face and design your perfect outfit.'}
+                                      : mode === 'triptych'
+                                        ? 'Create cinematic 3-panel compositions from your photo.'
+                                        : mode === 'pet_merch'
+                                          ? 'Turn your pet or character into cute merchandise like stamps and gachapon.'
+                                          : mode === 'product_food'
+                                            ? 'Create professional product and food photography with perfect lighting.'
+                                            : mode === 'figure'
+                                              ? 'Turn your character into a high-quality 1/7 scale commercial figure.'
+                                              : 'Upload a face and design your perfect outfit.'}
                       </p>
                     </div>
                   )}

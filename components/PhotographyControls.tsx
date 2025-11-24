@@ -38,12 +38,14 @@ export const PhotographyControls: React.FC<PhotographyControlsProps> = ({
     onBackgroundImageChange
 }) => {
     const [activeTab, setActiveTab] = useState<'guided' | 'camera' | 'presets'>('guided');
+    const [selectedPresetId, setSelectedPresetId] = useState<string | null>(null);
 
     const updateParam = (key: keyof PhotographyParams, value: any) => {
         onChange({ ...photographyParams, [key]: value });
     };
 
     const applyPreset = (preset: typeof PHOTOGRAPHY_PRESETS[0]) => {
+        setSelectedPresetId(preset.id);
         onChange({ ...photographyParams, ...preset.params });
     };
 
@@ -648,24 +650,38 @@ export const PhotographyControls: React.FC<PhotographyControlsProps> = ({
                     {/* Camera Settings Tab */}
                     {activeTab === 'camera' && renderCameraSettings()}
 
-                    {/* Presets Tab */}
                     {activeTab === 'presets' && (
                         <div className="animate-fadeIn">
                             <div className="grid grid-cols-2 gap-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-                                {PHOTOGRAPHY_PRESETS.map((preset) => (
-                                    <button
-                                        key={preset.id}
-                                        onClick={() => applyPreset(preset)}
-                                        className="group relative p-4 rounded-xl border bg-slate-800/50 border-slate-700 hover:bg-slate-800 hover:border-brand-500 text-left transition-all"
-                                    >
-                                        <div className="font-medium text-sm mb-1 text-white group-hover:text-brand-400">
-                                            {preset.name}
-                                        </div>
-                                        <div className="text-[10px] text-slate-400 line-clamp-2">
-                                            {preset.description}
-                                        </div>
-                                    </button>
-                                ))}
+                                {PHOTOGRAPHY_PRESETS.map((preset) => {
+                                    const isSelected = selectedPresetId === preset.id;
+                                    return (
+                                        <button
+                                            key={preset.id}
+                                            onClick={() => applyPreset(preset)}
+                                            className={`group relative p-4 rounded-xl border text-left transition-all ${isSelected
+                                                    ? 'bg-brand-600 border-brand-500 shadow-lg ring-2 ring-brand-400'
+                                                    : 'bg-slate-800/50 border-slate-700 hover:bg-slate-800 hover:border-brand-500'
+                                                }`}
+                                        >
+                                            <div className={`font-medium text-sm mb-1 ${isSelected ? 'text-white' : 'text-white group-hover:text-brand-400'
+                                                }`}>
+                                                {preset.name}
+                                            </div>
+                                            <div className={`text-[10px] line-clamp-2 ${isSelected ? 'text-brand-100' : 'text-slate-400'
+                                                }`}>
+                                                {preset.description}
+                                            </div>
+                                            {isSelected && (
+                                                <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-lg">
+                                                    <svg className="w-3 h-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}

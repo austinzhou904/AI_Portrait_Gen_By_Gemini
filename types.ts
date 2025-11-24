@@ -6,7 +6,7 @@ export enum AspectRatio {
   Ratio_16_9 = '16:9',
 }
 
-export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography' | 'pose_transfer' | 'scene_gen' | 'free_mode' | 'hanfu' | 'travel';
+export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography' | 'pose_transfer' | 'scene_gen' | 'free_mode' | 'hanfu' | 'travel' | 'triptych' | 'pet_merch' | 'product_food' | 'figure' | 'beauty';
 
 export interface FashionParams {
   glasses: string;
@@ -168,4 +168,25 @@ export interface HistoryItem {
   referenceImage?: string;
   targetImage?: string;
   aspectRatio?: AspectRatio;
+}
+
+export interface TravelParams {
+  country: string;
+  season: string;
+  festival: string;
+  landmark: string;
+  timeOfDay: string;
+  cameraPosition: string;
+  lens: string;
+  pitchAngle: string;
+  shotType: string;
+}
+
+export interface TriptychParams {
+  selectedPreset: string;
+  customPrompt?: string;
+}
+
+export interface BeautyParams {
+  selectedOptions: string[];
 }
