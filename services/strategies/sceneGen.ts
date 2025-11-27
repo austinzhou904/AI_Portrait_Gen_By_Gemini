@@ -161,58 +161,6 @@ export class SceneGenStrategy implements GenerationStrategy {
             return [refImagePart, { text: fourPanelPrompt }].filter(part => part !== null);
         }
 
-        if (sceneGenParams.selectedTemplateId === 'doodle_bombing') {
-            const backgroundId = sceneGenParams.customProps || 'graffiti_alley';
-            let backgroundPrompt = 'A blurred, colorful urban graffiti alleyway in bright daylight';
-
-            switch (backgroundId) {
-                case 'neon_city':
-                    backgroundPrompt = 'A vibrant cyberpunk city street at night with neon signs';
-                    break;
-                case 'white_studio':
-                    backgroundPrompt = 'A clean, high-key white studio background';
-                    break;
-                case 'abstract_pop':
-                    backgroundPrompt = 'A dynamic abstract background with pop-art patterns and halftone dots';
-                    break;
-                case 'skate_park':
-                    backgroundPrompt = 'A sunny outdoor skate park with concrete ramps and blue sky';
-                    break;
-                case 'graffiti_alley':
-                default:
-                    backgroundPrompt = 'A blurred, colorful urban graffiti alleyway in bright daylight';
-                    break;
-            }
-
-            const doodlePrompt = `Task: Generate a "Doodle Bombing" Mixed Media Portrait
-
-      ${referenceImageBase64 ? 'REFERENCE FACE PROVIDED: Use the attached image to preserve facial identity exactly.' : 'NO REFERENCE IMAGE: Generate character from description.'}
-
-      [Aesthetic Philosophy]: "Harajuku Pop-Art Explosion". A creative blend of hyper-realistic commercial photography and vibrant 2D cartoon/vector art.
-
-      [Subject]:
-      - Appearance: A photorealistic medium shot of a cute young Asian woman (or matching reference face).
-      - Style: Short dark bob haircut (unless reference differs), playful pouting expression, making a heart shape with hands.
-      - Outfit: Rainbow-striped t-shirt and pink denim overalls (dungarees).
-
-      [The "Doodle Bombing" Style]:
-      - The realistic photo is heavily decorated with bright, bold, colorful 2D vector graphics and stickers floating around her.
-      - Elements: Cute smiling monster faces, neon hearts, stars, rainbows, and bubbly graffiti text.
-      - Art Style: Thick outlines, flat saturated colors (neon pink, cyan, yellow).
-      - Integration: The doodles should interact with the subject (e.g., peeking over her shoulder, floating near her hands).
-
-      [Background]:
-      ${backgroundPrompt}
-
-      [Technical]:
-      - 8k resolution, sharp focus on the face.
-      - High-quality commercial photography lighting.
-      - High saturation, cheerful atmosphere.
-      - Aspect Ratio: ${ratio}
-      `;
-            return [refImagePart, { text: doodlePrompt }].filter(part => part !== null);
-        }
-
         return [refImagePart, { text: sceneGenPrompt }].filter(part => part !== null);
     }
 }

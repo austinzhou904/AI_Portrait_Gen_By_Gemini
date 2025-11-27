@@ -37,7 +37,12 @@ import {
   CharacterEditParams,
   GameStyleParams,
   ImageModParams,
-  DragonBallParams
+  DragonBallParams,
+  DoodleBombingParams,
+  OOTDParams,
+  LiteracyCardParams,
+  CharacterDesignParams,
+  ObjectDecompositionParams
 } from '../types';
 import { FashionControls } from './FashionControls';
 import { AgeControls } from './AgeControls';
@@ -54,6 +59,10 @@ import { CharacterEditControls } from './CharacterEditControls';
 import { GameStyleControls } from './GameStyleControls';
 import { DragonBallCardControls } from './DragonBallCardControls';
 import { ObjectDecompositionControls } from './ObjectDecompositionControls';
+import { DoodleBombingControls } from './DoodleBombingControls';
+import { OOTDControls } from './OOTDControls';
+import { LiteracyCardControls } from './LiteracyCardControls';
+import CharacterDesignControls from './CharacterDesignControls';
 import { DRAGON_BALL_CHARACTERS } from '../constants/dragonBallData';
 import { compositeDragonBallCard } from '../utils/dragonBallCompositor';
 import { ASPECT_RATIOS } from '../constants';
@@ -218,6 +227,22 @@ const App: React.FC = () => {
   const [objectDecompositionParams, setObjectDecompositionParams] = useState<ObjectDecompositionParams>({
     objectName: ''
   });
+  const [doodleBombingParams, setDoodleBombingParams] = useState<DoodleBombingParams>({
+    doodleStyle: 'cute_monsters',
+    background: 'graffiti_alley',
+    expression: 'playful',
+    bodyPose: 'standing',
+    timeOfDay: 'noon'
+  });
+  const [ootdParams, setOOTDParams] = useState<OOTDParams>({
+    selectedStyle: 'monster_twin'
+  });
+  const [literacyCardParams, setLiteracyCardParams] = useState<LiteracyCardParams>({
+    theme: 'Animal World'
+  });
+  const [characterDesignParams, setCharacterDesignParams] = useState<CharacterDesignParams>({
+    customPrompt: ''
+  });
 
   // Load history from server on mount
   useEffect(() => {
@@ -267,7 +292,7 @@ const App: React.FC = () => {
   const handleGenerate = async () => {
     setError(null);
 
-    if (!referenceImage && mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition') {
+    if (!referenceImage && mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card') {
       setError("Please upload a reference face.");
       return;
     }
@@ -352,7 +377,11 @@ const App: React.FC = () => {
         gameStyleParams,
         imageModParams,
         mode === 'dragon_ball' ? currentDragonBallParams : dragonBallParams,
-        objectDecompositionParams
+        objectDecompositionParams,
+        doodleBombingParams,
+        ootdParams,
+        literacyCardParams,
+        characterDesignParams
       );
       let finalImageUrl = resultUrl;
 
@@ -409,7 +438,10 @@ const App: React.FC = () => {
             styleCopyParams,
             characterEditParams,
             dragonBallParams: mode === 'dragon_ball' ? currentDragonBallParams : undefined,
-            objectDecompositionParams
+            objectDecompositionParams,
+            doodleBombingParams,
+            ootdParams,
+            literacyCardParams
           }),
         });
 
@@ -818,13 +850,61 @@ const App: React.FC = () => {
                       <span className="text-xs">Decompose</span>
                     </div>
                   </button>
+                  <button
+                    onClick={() => { setMode('doodle_bombing'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'doodle_bombing'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🎨</span>
+                      <span className="text-xs">Doodle</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('ootd'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'ootd'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">👗</span>
+                      <span className="text-xs">OOTD</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('literacy_card'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'literacy_card'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🔤</span>
+                      <span className="text-xs">识字卡片</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('character_design'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'character_design'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">📐</span>
+                      <span className="text-xs">角色设定集</span>
+                    </div>
+                  </button>
                 </div>
               </div>
 
               <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 shadow-xl backdrop-blur-sm">
 
-                {/* Reference Face (Common to both) - Hidden for Group Photo */}
-                {mode !== 'group_photo' && (
+                {/* Reference Face (Common to both) - Hidden for Group Photo and Literacy Card */}
+                {mode !== 'group_photo' && mode !== 'literacy_card' && (
                   <ImageUploader
                     id="ref-img"
                     label="1. Reference Face (Source)"
@@ -1189,7 +1269,23 @@ const App: React.FC = () => {
                     />
                     <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
-                ) : (
+                ) : mode === 'doodle_bombing' ? (
+                  <>
+                    <DoodleBombingControls
+                      params={doodleBombingParams}
+                      onChange={setDoodleBombingParams}
+                    />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                  </>
+                ) : mode === 'ootd' ? (
+                  <>
+                    <OOTDControls
+                      params={ootdParams}
+                      onChange={setOOTDParams}
+                    />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                  </>
+                ) : mode === 'character_edit' ? (
                   <>
                     {/* Character Edit Mode Controls */}
                     <div className="mb-8">
@@ -1200,14 +1296,41 @@ const App: React.FC = () => {
                       <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
+                ) : null}
+
+
+
+                {mode === 'literacy_card' && (
+                  <div className="bg-slate-800/50 p-6 rounded-xl border border-slate-700">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                      <span className="mr-2">🔤</span> Literacy Card Settings
+                    </h3>
+                    <LiteracyCardControls
+                      params={literacyCardParams}
+                      onChange={setLiteracyCardParams}
+                    />
+                  </div>
+                )}
+
+                {mode === 'character_design' && (
+                  <div className="bg-slate-800/50 p-6 rounded-xl border border-slate-700">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                      <span className="mr-2">📐</span> Character Design Settings
+                    </h3>
+                    <CharacterDesignControls
+                      params={characterDesignParams}
+                      onChange={setCharacterDesignParams}
+                    />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                  </div>
                 )}
 
                 {/* Generate Button */}
                 <button
                   onClick={handleGenerate}
-                  disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)}
+                  disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'character_design' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)}
                   className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl flex items-center justify-center transition-all transform active:scale-[0.98]
-                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)
+                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'character_design' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)
                       ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white shadow-brand-500/25 hover:shadow-brand-500/40'}
                   `}

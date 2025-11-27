@@ -1,5 +1,5 @@
 import { GoogleGenAI, Modality } from "@google/genai";
-import { AspectRatio, AppMode, GroupPhotoParams, CharacterEditParams, GameStyleParams, ImageModParams } from "../types";
+import { AspectRatio, AppMode, GroupPhotoParams, CharacterEditParams, GameStyleParams, ImageModParams, DoodleBombingParams, OOTDParams, LiteracyCardParams, CharacterDesignParams } from "../types";
 import { GenerationContext, GenerationStrategy } from "./strategies/types";
 import { FaceSwapStrategy } from "./strategies/faceSwap";
 import { StyleTransferStrategy } from "./strategies/styleTransfer";
@@ -25,6 +25,10 @@ import { PetMerchStrategy } from "./strategies/petMerch";
 import { ProductFoodStrategy } from "./strategies/productFood";
 import { FigureStrategy } from "./strategies/figure";
 import { BeautyStrategy } from "./strategies/beauty";
+import { DoodleBombingStrategy } from "./strategies/doodleBombingStrategy";
+import { OOTDStrategy } from "./strategies/ootdStrategy";
+import { LiteracyCardStrategy } from "./strategies/literacyCardStrategy";
+import { CharacterDesignStrategy } from "./strategies/characterDesignStrategy";
 
 declare const process: any;
 
@@ -75,6 +79,10 @@ const strategies: Record<string, GenerationStrategy> = {
   'image_modification': new ImageModStrategy(),
   'dragon_ball': new DragonBallStrategy(),
   'object_decomposition': new ObjectDecompositionStrategy(),
+  'doodle_bombing': new DoodleBombingStrategy(),
+  'ootd': new OOTDStrategy(),
+  'literacy_card': new LiteracyCardStrategy(),
+  'character_design': new CharacterDesignStrategy(),
 };
 
 export const generatePortrait = async (
@@ -84,7 +92,7 @@ export const generatePortrait = async (
   mode: AppMode = 'portrait',
   targetImageBase64?: string,
   faceDescription?: string,
-  model: string = 'gemini-2.5-flash-image',
+  model: string = 'gemini-2.0-flash-exp',
   styleDirection?: 'photo_to_cartoon' | 'cartoon_to_photo',
   cartoonStyle?: string,
   ethnicity?: string,
@@ -109,11 +117,13 @@ export const generatePortrait = async (
   gameStyleParams?: GameStyleParams,
   imageModParams?: ImageModParams,
   dragonBallParams?: any,
-  objectDecompositionParams?: any
+  objectDecompositionParams?: any,
+  doodleBombingParams?: DoodleBombingParams,
+  ootdParams?: OOTDParams,
+  literacyCardParams?: LiteracyCardParams,
+  characterDesignParams?: CharacterDesignParams
 ): Promise<string> => {
-  const ai = getClient();
-
-  const strategy = strategies[mode] || strategies['portrait'];
+  const client = getClient();
 
   const context: GenerationContext = {
     referenceImageBase64,
@@ -145,92 +155,76 @@ export const generatePortrait = async (
     gameStyleParams,
     imageModParams,
     dragonBallParams,
-    objectDecompositionParams
+    objectDecompositionParams,
+    doodleBombingParams,
+    ootdParams,
+    literacyCardParams,
+    characterDesignParams
   };
+
+  const strategy = strategies[mode];
+  if (!strategy) {
+    throw new Error(`Strategy not implemented for mode: ${mode}`);
+  }
 
   try {
     const parts = await strategy.buildParts(context);
 
-    // Map our aspect ratio format to Gemini API format
-    const aspectRatioMap: Record<string, string> = {
-      '3:4': '3:4',
-      '4:3': '4:3',
-      '1:1': '1:1',
-      '9:16': '9:16',
-      '16:9': '16:9'
-    };
+    console.log(`[DEBUG] Generating with model: ${model} for mode: ${mode}`);
 
-    const isFlashImage = model === 'gemini-2.5-flash-image';
-
-    const config: any = {
-      responseModalities: isFlashImage ? [Modality.IMAGE] : [Modality.TEXT, Modality.IMAGE],
-      imageConfig: {
-        aspectRatio: aspectRatioMap[ratio] || '1:1',
-      },
-    };
-
-    if (!isFlashImage) {
-      config.thinkingConfig = {
-        includeThoughts: true
-      };
-
-      // For Pro model, set image size from env or default to 2K
-      if (model === 'gemini-3-pro-image-preview') {
-        const imageSize = import.meta.env.VITE_GEMINI_IMAGE_SIZE || '2K';
-        config.imageConfig.imageSize = imageSize;
-      }
-    }
-
-    const response = await ai.models.generateContent({
+    const response = await client.models.generateContent({
       model: model,
-      contents: { parts },
-      config: config,
+      contents: [
+        {
+          parts: parts
+        }
+      ],
+      config: {
+        responseModalities: [Modality.IMAGE],
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' }
+        ],
+      }
     });
 
-    const resultParts = response.candidates?.[0]?.content?.parts;
-    if (!resultParts || resultParts.length === 0) {
-      throw new Error("No image generated.");
+    const generatedImage = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+
+    if (!generatedImage) {
+      throw new Error("No image generated");
     }
 
-    // Handle the response
-    for (const part of resultParts) {
-      if (part.text) {
-        console.log(`[Nano Banana Thought]: ${part.text}`);
-      }
-      if (part.inlineData) {
-        const base64ImageBytes = part.inlineData.data;
-        return `data:image/png;base64,${base64ImageBytes}`;
-      }
-    }
-
-    throw new Error("Unexpected response format: No inline image data found.");
-
+    return generatedImage;
   } catch (error: any) {
-    console.error("Gemini API Error:", error);
-    throw new Error(error.message || "Failed to generate image");
+    console.error("Error generating portrait:", error);
+    throw new Error(`Failed to generate portrait: ${error.message || "Unknown error"}`);
   }
 };
 
 export const analyzeStyle = async (image: string): Promise<string> => {
-  const ai = getClient();
+  const client = getClient();
   const cleanBase64 = (str: string) => str.split(',')[1] || str;
 
   try {
-    const analysisResponse = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: {
-        parts: [
-          {
-            inlineData: {
-              mimeType: 'image/png',
-              data: cleanBase64(image)
+    const analysisResponse = await client.models.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: [
+        {
+          parts: [
+            {
+              inlineData: {
+                mimeType: 'image/png',
+                data: cleanBase64(image)
+              }
+            },
+            {
+              text: "给我json类型的结构化提示词. Analyze this image and provide a structured JSON description of the style, lighting, colors, composition, and mood. Return ONLY the JSON."
             }
-          },
-          {
-            text: "给我json类型的结构化提示词. Analyze this image and provide a structured JSON description of the style, lighting, colors, composition, and mood. Return ONLY the JSON."
-          }
-        ]
-      },
+          ]
+        }
+      ],
       config: {
         responseModalities: [Modality.TEXT]
       }

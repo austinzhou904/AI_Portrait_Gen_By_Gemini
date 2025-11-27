@@ -95,32 +95,7 @@ export const SceneGenControls: React.FC<SceneGenControlsProps> = ({
                 </div>
             </div>
 
-            {/* Doodle Bombing Background Selector */}
-            {selectedTemplate === 'doodle_bombing' && (
-                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700 animate-fadeIn">
-                    <h3 className="text-sm font-medium text-slate-300 mb-3">🎨 选择背景 (Background)</h3>
-                    <div className="grid grid-cols-2 gap-2">
-                        {[
-                            { id: 'graffiti_alley', label: '涂鸦巷 (Graffiti Alley)' },
-                            { id: 'neon_city', label: '霓虹城市 (Neon City)' },
-                            { id: 'white_studio', label: '白色影棚 (White Studio)' },
-                            { id: 'abstract_pop', label: '波普抽象 (Abstract Pop)' },
-                            { id: 'skate_park', label: '滑板公园 (Skate Park)' }
-                        ].map((bg) => (
-                            <button
-                                key={bg.id}
-                                onClick={() => onChange({ ...sceneGenParams, customProps: bg.id })}
-                                className={`p-2 rounded-lg text-xs transition-all ${sceneGenParams.customProps === bg.id
-                                    ? 'bg-purple-600 text-white shadow-md'
-                                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                                    }`}
-                            >
-                                {bg.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            )}
+
 
             {/* Tabs */}
             <div className="flex gap-2 border-b border-slate-700 pb-2 overflow-x-auto">

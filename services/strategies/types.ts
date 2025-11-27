@@ -1,5 +1,4 @@
-
-import { AspectRatio } from '../../types';
+import { AspectRatio, DragonBallParams, ObjectDecompositionParams, DoodleBombingParams, OOTDParams, LiteracyCardParams, CharacterDesignParams } from '../../types';
 
 export interface GenerationContext {
     referenceImageBase64: string;
@@ -32,8 +31,12 @@ export interface GenerationContext {
     characterEditParams?: any;
     gameStyleParams?: any;
     imageModParams?: any;
-    dragonBallParams?: any;
-    objectDecompositionParams?: any;
+    dragonBallParams?: DragonBallParams;
+    objectDecompositionParams?: ObjectDecompositionParams;
+    doodleBombingParams?: DoodleBombingParams;
+    ootdParams?: OOTDParams;
+    literacyCardParams?: LiteracyCardParams;
+    characterDesignParams?: CharacterDesignParams;
 }
 
 export interface GenerationStrategy {

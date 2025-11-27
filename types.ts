@@ -1,12 +1,40 @@
+export type AppMode =
+  | 'portrait'
+  | 'faceswap'
+  | 'style_transfer'
+  | 'fashion'
+  | 'age_transform'
+  | 'hairstyle'
+  | 'tattoo'
+  | 'photography'
+  | 'pose_transfer'
+  | 'scene_gen'
+  | 'free_mode'
+  | 'hanfu'
+  | 'travel'
+  | 'triptych'
+  | 'pet_merch'
+  | 'product_food'
+  | 'figure'
+  | 'beauty'
+  | 'group_photo'
+  | 'style_copy'
+  | 'character_edit'
+  | 'game_style'
+  | 'dragon_ball'
+  | 'object_decomposition'
+  | 'doodle_bombing'
+  | 'ootd'
+  | 'literacy_card'
+  | 'character_design';
+
 export enum AspectRatio {
+  Ratio_1_1 = '1:1',
   Ratio_3_4 = '3:4',
   Ratio_4_3 = '4:3',
-  Ratio_1_1 = '1:1',
   Ratio_9_16 = '9:16',
-  Ratio_16_9 = '16:9',
+  Ratio_16_9 = '16:9'
 }
-
-export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography' | 'pose_transfer' | 'scene_gen' | 'free_mode' | 'hanfu' | 'travel' | 'triptych' | 'pet_merch' | 'product_food' | 'figure' | 'beauty' | 'group_photo' | 'style_copy' | 'character_edit' | 'game_style' | 'image_modification' | 'dragon_ball' | 'object_decomposition';
 
 export interface FashionParams {
   glasses: string;
@@ -83,7 +111,6 @@ export interface SceneGenParams {
   locationType: string;
   surface: string;
   props: string[];
-  customProps?: string;
 
   // Camera & Style
   cameraAngle: string;
@@ -239,5 +266,29 @@ export interface CharacterEditParams {
 
 export interface ImageModParams {
   selectedPreset: string;
+  customPrompt?: string;
+}
+
+export interface DoodleBombingParams {
+  doodleStyle: string;
+  background: string;
+  expression: string;
+  bodyPose: string;
+  timeOfDay: string;
+}
+
+export interface OOTDParams {
+  selectedStyle: string;
+  clothing?: string;
+  location?: string;
+  doll?: string;
+  timeOfDay?: string;
+}
+
+export interface LiteracyCardParams {
+  theme: string;
+}
+
+export interface CharacterDesignParams {
   customPrompt?: string;
 }
